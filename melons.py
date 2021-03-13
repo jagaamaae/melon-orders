@@ -1,6 +1,6 @@
 """Classes for melon orders."""
 
-import random
+from random import randint
 import datetime
 
 class AbstractMelonOrder():
@@ -13,11 +13,14 @@ class AbstractMelonOrder():
         self.order_type = order_type
         self.tax = tax
         
+    def is_rush_hour(self, today):
+        if today.weekday() < 5:
+            return today.hour >= 8 and today.hour <= 11
+        
     def get_base_price(self):
         """Choooses a random integer between 5-9 as base price."""
-        base_price = random.randrange(5, 10)
-        base_price = float(base_price)
-
+        base_price = randint(5, 10)
+        
         return base_price
 
     def get_total(self):
@@ -71,4 +74,9 @@ class GovernmentMelonOrder(AbstractMelonOrder):
     def mark_inspection(self, passed):
         self.passed_inspection = passed
         print (self.passed_inspection)
+
+class TooManyMelonsError(ValueError):
+    """Raises error if order qty > 100"""
+    def __init__(self):
+        super(TooManyMelonsError, self).__init__("No more than 100 melons!")
 
